@@ -1,5 +1,6 @@
 // include C++ STL headers 
 #include <iostream>
+#include <fstream>
 
 using namespace std;
 
@@ -25,16 +26,19 @@ void rootfuncgenerate(Int_t nEvents, Int_t nTracks, Double_t v2)
   TF1* functionf = new TF1("functionf", Form("1 + 2*%f*cos(2*(x - 0))", v2), 0, TMath::TwoPi());
   
   Double_t phi[nTracks]; // array to store phi angles
-  
-  // generate nTracks phi angles
-  for (Int_t nt = 0; nt < nTracks; nt++) {
-  // Fill the array
-    phi[nt] = functionf->GetRandom();
+
+  for (Int_t ne = 0; ne < nEvents; ne++) {
+    cout << "Event " << ne << endl;
+    cout << "nTracks " << nTracks << endl;
+    for (Int_t nt = 0; nt < nTracks; nt++) {
+      Double_t phi = functionf->GetRandom();
+      cout << nt << " : " << phi << endl;
+    }
   }
 
   // make a loop for the number of events
   for(Int_t i = 0; i < nTracks; i++) {
-    hPhi->Fill(phi[i]);
+    hPhi->Fill(phi[i]); 
   }
   
   // Set ROOT drawing styles
