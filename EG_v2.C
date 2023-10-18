@@ -10,10 +10,10 @@ using namespace std;
 #include <TMath.h>   // math functions
 #include <TCanvas.h> // canvas object
 
-void rootfuncgenerate(Int_t nEvents, Double_t v2); // ROOT method
+void rootfuncgenerate(Int_t nEvents, Int_t nTracks, Double_t v2); // ROOT method
 
 //________________________________________________________________________
-void rootfuncgenerate(Int_t nEvents, Double_t v2) 
+void rootfuncgenerate(Int_t nEvents, Int_t nTracks, Double_t v2) 
 {
   cout << "Generating " << nEvents << " events" << endl << endl;
 
@@ -24,14 +24,17 @@ void rootfuncgenerate(Int_t nEvents, Double_t v2)
   // Define the function we want to generate (f(φ) distribution)
   TF1* functionf = new TF1("functionf", Form("1 + 2*%f*cos(2*(x - 0))", v2), 0, TMath::TwoPi());
   
+  Double_t phi[nTracks]; // array to store phi angles
+  
+  // generate nTracks phi angles
+  for (Int_t nt = 0; nt < nTracks; nt++) {
+  // Fill the array
+    phi[nt] = functionf->GetRandom();
+  }
+
   // make a loop for the number of events
-  for(Int_t n = 0; n < nEvents; n++) {
-    
-    if((n+1)%1000==0)
-      cout << "event " << n+1 << endl;
-    
-    // fill our distribution histogram
-    hPhi->Fill(functionf->GetRandom()); 
+  for(Int_t i = 0; i < nTracks; i++) {
+    hPhi->Fill(phi[i]);
   }
   
   // Set ROOT drawing styles
